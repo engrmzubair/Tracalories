@@ -16,11 +16,7 @@ const ItemCtrl = (function () {
 
   //Data Structure / State
   const data = {
-    items: [
-      { id: 0, name: 'Streak Dinner', calories: 1200 },
-      { id: 1, name: 'Eggs', calories: 400 },
-      { id: 2, name: 'Cookie', calories: 300 }
-    ],
+    items: [],
     currentItem: null,
     totalCalories: 0
   }
@@ -83,6 +79,15 @@ const UI = (function () {
         calories: document.querySelector(UISelectors.itemCalories).value
       }
     },
+    clearInput: function () {
+      document.querySelector(UISelectors.itemName).value = '';
+      document.querySelector(UISelectors.itemCalories).value = '';
+      document.querySelector(UISelectors.itemName).classList.remove('is-valid');
+      document.querySelector(UISelectors.itemName).classList.remove('is-invalid');
+      document.querySelector(UISelectors.itemCalories).classList.remove('is-valid');
+      document.querySelector(UISelectors.itemCalories).classList.remove('is-invalid');
+    },
+
     validateInput: function (name, calories) {
 
       const reName = /^[a-zA-Z]{2,10}$/;
@@ -141,12 +146,16 @@ const App = (function (ItemCtrl, UI) {
 
     //check if is valid, then proceed
     if (!isValid)
-      return
+      return setTimeout(UI.clearInput, 3000);
+
 
     //create new item
     const newItem = ItemCtrl.addItem(input.name, input.calories);
 
     UI.populateItemsList(ItemCtrl.getItems());
+
+    //clear input 
+    return setTimeout(UI.clearInput, 3000);
 
 
   }
