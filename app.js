@@ -3,7 +3,7 @@
 
 
 
-
+// -------------------------------------------------------------------------------------
 //Item Controller
 const ItemCtrl = (function () {
 
@@ -16,7 +16,11 @@ const ItemCtrl = (function () {
 
   //Data Structure / State
   const data = {
-    items: [],
+    items: [
+      { id: 0, name: 'Streak Dinner', calories: 1200 },
+      { id: 1, name: 'Eggs', calories: 400 },
+      { id: 2, name: 'Cookie', calories: 300 }
+    ],
     currentItem: null,
     totalCalories: 0
   }
@@ -41,14 +45,18 @@ const ItemCtrl = (function () {
 })();
 
 
-
+// ---------------------------------------------------------------------------------------
 //UI Controller
 const UI = (function () {
   const UISelectors = {
     itemList: '#item-list',
     addBtn: '.add-btn',
+    updateBtn: '.update-btn',
+    deleteBtn: '.delete-btn',
+    backBtn: '.back-btn',
     itemName: '#item-name',
     itemCalories: '#item-calories',
+    totalCalories: '.total-calories'
 
   }
 
@@ -119,12 +127,29 @@ const UI = (function () {
         return true
       return false
 
+    },
+    getTotalCalories: function (items) {
+
+      let calories = 0;
+
+      items.forEach(item => {
+        calories += item.calories;
+      })
+
+      //git totalCalories
+      ItemCtrl.logData().totalCalories = calories;
+      document.querySelector(UISelectors.totalCalories).innerText = calories;
+      console.log(ItemCtrl.logData())
+    },
+
+    editItem: function (item) {
+
     }
   }
 
 })();
 
-
+// ------------------------------------------------------------------------------------
 //App Controller
 const App = (function (ItemCtrl, UI) {
   //load all events
@@ -132,10 +157,10 @@ const App = (function (ItemCtrl, UI) {
     //get UI Selectors
     const UISelectors = UI.getSelectors();
 
-    //add an event
-    document.querySelector(UISelectors.addBtn).addEventListener('click', itemAddSubmit)
-
+    //add an event for add button
+    document.querySelector(UISelectors.addBtn).addEventListener('click', itemAddSubmit);
   }
+
 
   //Add Item Submit
   const itemAddSubmit = function () {
@@ -146,13 +171,15 @@ const App = (function (ItemCtrl, UI) {
 
     //check if is valid, then proceed
     if (!isValid)
-      return setTimeout(UI.clearInput, 3000);
-
+      return
 
     //create new item
     const newItem = ItemCtrl.addItem(input.name, input.calories);
 
     UI.populateItemsList(ItemCtrl.getItems());
+
+    //total calories
+    UI.getTotalCalories(ItemCtrl.getItems());
 
     //clear input 
     return setTimeout(UI.clearInput, 3000);
@@ -167,6 +194,9 @@ const App = (function (ItemCtrl, UI) {
 
       //populate list with items
       UI.populateItemsList(items);
+
+      //count total calories
+      UI.getTotalCalories(items);
 
       //load event listeners
       loadEventsListeners();
