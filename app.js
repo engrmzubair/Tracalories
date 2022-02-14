@@ -32,10 +32,15 @@ const ItemCtrl = (function () {
     },
     logData: function () {
       return data
+    },
+    addItem: function (name, calories) {
+      const id = data.items.length;
+      calories = parseInt(calories);
+      const items = { id, name, calories };
+      data.items.push(items);
+      console.log(data.items);
     }
   }
-
-
 
 })();
 
@@ -140,6 +145,8 @@ const App = (function (ItemCtrl, UI) {
 
     //create new item
     const newItem = ItemCtrl.addItem(input.name, input.calories);
+
+    UI.populateItemsList(ItemCtrl.getItems());
 
 
   }
