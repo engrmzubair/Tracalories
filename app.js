@@ -2,6 +2,8 @@
 
 
 
+
+
 //Item Controller
 const ItemCtrl = (function () {
 
@@ -25,8 +27,12 @@ const ItemCtrl = (function () {
 
   //Public data
   return {
-    getItems: data.items,
-    logData: data
+    getItems: function () {
+      return data.items
+    },
+    logData: function () {
+      return data
+    }
   }
 
 
@@ -34,12 +40,16 @@ const ItemCtrl = (function () {
 })();
 
 
+
 //UI Controller
 const UI = (function () {
-const UISelector = {
-  itemList: '#item-list'
-}
+  const UISelectors = {
+    itemList: '#item-list',
+    addBtn: '.add-btn',
+    itemName: '#item-name',
+    itemCalories: '#item-calories',
 
+  }
 
   //Public Methods
   return {
@@ -57,7 +67,48 @@ const UISelector = {
       });
 
       //inser list items
-      document.querySelector(UISelector.itemList).innerHTML = html;
+      document.querySelector(UISelectors.itemList).innerHTML = html;
+    },
+    getSelectors: function () {
+      return UISelectors;
+    },
+    getItemInput: function () {
+      return {
+        name: document.querySelector(UISelectors.itemName).value,
+        calories: document.querySelector(UISelectors.itemCalories).value
+      }
+    },
+    validateInput: function (name, calories) {
+
+      const reName = /^[a-zA-Z]{2,10}$/;
+      const reCalories = /^[0-9]{2,6}$/
+
+      //check if name is valid
+      if (reName.test(name)) {
+        document.querySelector(UISelectors.itemName).classList.add('is-valid');
+        document.querySelector(UISelectors.itemName).classList.remove('is-invalid');
+      }
+      else {
+        document.querySelector(UISelectors.itemName).classList.add('is-invalid');
+        document.querySelector(UISelectors.itemName).classList.remove('is-valid');
+      }
+
+
+      //check if calories is valid
+      if (reCalories.test(calories)) {
+        document.querySelector(UISelectors.itemCalories).classList.add('is-valid');
+        document.querySelector(UISelectors.itemCalories).classList.remove('is-invalid');
+      }
+      else {
+        document.querySelector(UISelectors.itemCalories).classList.add('is-invalid');
+        document.querySelector(UISelectors.itemCalories).classList.remove('is-valid');
+      }
+
+
+      if (reName.test(name) === true && reCalories.test(calories) === true)
+        return true
+      return false
+
     }
   }
 
@@ -66,15 +117,43 @@ const UISelector = {
 
 //App Controller
 const App = (function (ItemCtrl, UI) {
+  //load all events
+  const loadEventsListeners = function () {
+    //get UI Selectors
+    const UISelectors = UI.getSelectors();
+
+    //add an event
+    document.querySelector(UISelectors.addBtn).addEventListener('click', itemAddSubmit)
+
+  }
+
+  //Add Item Submit
+  const itemAddSubmit = function () {
+
+    //get form input from UI
+    const input = UI.getItemInput();
+    const isValid = UI.validateInput(input.name, input.calories)
+
+    //check if is valid, then proceed
+    if (!isValid)
+      return
+
+    //create new item
+    const newItem = ItemCtrl.addItem(input.name, input.calories);
+
+
+  }
 
   return {
     init: function () {
       //fetch items from data structure
-      const items = ItemCtrl.getItems;
-      console.log(items);
+      const items = ItemCtrl.getItems();
 
       //populate list with items
       UI.populateItemsList(items);
+
+      //load event listeners
+      loadEventsListeners();
     }
   }
 
