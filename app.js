@@ -91,8 +91,8 @@ const UI = (function () {
     itemName: '#item-name',
     itemCalories: '#item-calories',
     totalCalories: '.total-calories',
-    clearAllBtn: '.clear-btn'
-
+    clearAllBtn: '.clear-btn',
+    alert: '#alert'
   }
 
   //Public Methods
@@ -130,17 +130,15 @@ const UI = (function () {
       document.querySelector(UISelectors.itemCalories).classList.remove('is-valid');
       document.querySelector(UISelectors.itemCalories).classList.remove('is-invalid');
     },
-
     addItemToForm: function (item) {
       document.querySelector(UISelectors.itemName).value = item.name;
       document.querySelector(UISelectors.itemCalories).value = item.calories;
 
     },
-
     validateInput: function (name, calories) {
 
-      const reName = /^[a-zA-Z]{2,10}$/;
-      const reCalories = /^[0-9]{2,6}$/
+      const reName = /^[a-zA-Z]+\s?[a-zA-Z]+$/;
+      const reCalories = /^[0-9]+$/;
 
       //check if name is valid
       if (reName.test(name)) {
@@ -194,6 +192,15 @@ const UI = (function () {
       document.querySelector(UISelectors.updateBtn).classList.add('d-none');
       document.querySelector(UISelectors.deleteBtn).classList.add('d-none');
       document.querySelector(UISelectors.backBtn).classList.add('d-none');
+    },
+    getAlert: function (message, className) {
+      const alert = document.querySelector(UISelectors.alert);
+      alert.className = className;
+      alert.textContent = message;
+    },
+    removeAlert: function (className) {
+      const alert = document.querySelector(UISelectors.alert);
+      alert.className = 'd-none';
     }
   }
 
@@ -247,7 +254,14 @@ const App = (function (ItemCtrl, UI) {
     UI.getTotalCalories(ItemCtrl.getItems());
 
     //clear input 
-    return setTimeout(UI.clearInput, 3000);
+    UI.clearInput();
+
+    //get alert on item addition
+    UI.getAlert('Item Added', 'success');
+
+    //remove alert
+    setTimeout(UI.removeAlert, 3000);
+
 
   }
 
@@ -282,8 +296,15 @@ const App = (function (ItemCtrl, UI) {
     //total calories
     UI.getTotalCalories(items);
 
+    //get alert on item addition
+    UI.getAlert('Item Updated', 'success');
+
+    //remove alert
+    setTimeout(UI.removeAlert, 3000);
+
     //clear input after 3 seconds
     setTimeout(UI.reGainState, 3000);
+
   }
 
   //delete Item
@@ -296,6 +317,12 @@ const App = (function (ItemCtrl, UI) {
 
     // clear state
     UI.reGainState()
+
+    //get alert on item addition
+    UI.getAlert('Item Deleted', 'danger');
+
+    //remove alert
+    setTimeout(UI.removeAlert, 3000);
   };
 
   //back items data
@@ -307,12 +334,18 @@ const App = (function (ItemCtrl, UI) {
   const clearAll = function () {
     //delete all items
     const items = ItemCtrl.clearAll();
-    
+
     //populate
     UI.populateItemsList(items);
 
     //calories
     UI.getTotalCalories(items);
+
+    //get alert on item addition
+    UI.getAlert('Items Deleted', 'danger');
+
+    //remove alert
+    setTimeout(UI.removeAlert, 3000);
 
   };
 

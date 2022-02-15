@@ -21,6 +21,20 @@
 
   <title>Tracalorie | Meal & Calorie Tracker</title>
   <style>
+    .danger {
+      background-color: red;
+      color: white;
+      padding: 0.5rem !important;
+      display: block;
+    }
+
+    .success {
+      background-color: green;
+      color: white;
+      padding: 0.5rem !important;
+      display: block
+    }
+
     .nav-link:hover {
       color: black !important;
     }
@@ -74,7 +88,8 @@
         <!-- form card -->
         <div class="card">
           <div class="card-body">
-            <h4><span class="card-title">Add Meal / Food Item</span></h4>
+            <h4><span class="card-title p-2">Add Meal / Food Item</span></h4>
+            <div id="alert" class="d-none"></div>
             <form>
               <div class="row mt-4">
                 <div class="col-md-6">
@@ -106,7 +121,8 @@
                   <botton class="delete-btn btn btn-danger btn-sm d-none">
                     <i class="fas fa-trash"></i> Delete Meal
                   </botton>
-                  <botton class="back-btn btn btn-secondary btn-sm d-none"><i class="fa fa-chevron-circle-left"></i> Back Meal
+                  <botton class="back-btn btn btn-secondary btn-sm d-none"><i class="fa fa-chevron-circle-left"></i>
+                    Back Meal
                   </botton>
 
                 </div>
