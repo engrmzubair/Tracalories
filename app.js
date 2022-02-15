@@ -39,6 +39,27 @@ const ItemCtrl = (function () {
       const items = { id, name, calories };
       data.items.push(items);
       console.log(data.items);
+    },
+    findCurrentItem: function (e, data) {
+      if (e.target.classList.contains('edit-item')) {
+        UI.clearEditState()
+        let listId = parseInt(e.target.parentElement.parentElement.id);
+        data.items.forEach(item => {
+          if (item.id === listId)
+            data.currentItem = item;
+        });
+        return data.currentItem
+      }
+    },
+    updateItem: function (name, calories) {
+      let caloriesInt = parseInt(calories)
+      data.items.forEach(item => {
+        if (item.id === data.currentItem.id) {
+          item.name = name;
+          item.calories = caloriesInt;
+        }
+      });
+      return data.items;
     }
   }
 
@@ -67,7 +88,7 @@ const UI = (function () {
 
       items.forEach(item => {
         html += `
-        <li class="list-group-item ${item.id}">
+        <li class="list-group-item" id="${item.id}">
             <strong>${item.name}</strong> <em><span class="badge rounded-pill bg-info text-dark ms-2">${item.calories}
                 Calories</span></em>
             <a href="#" class="secondary-content float-end me-3"><i class="edit-item fas fa-pencil-alt"></i></a>
@@ -94,6 +115,12 @@ const UI = (function () {
       document.querySelector(UISelectors.itemName).classList.remove('is-invalid');
       document.querySelector(UISelectors.itemCalories).classList.remove('is-valid');
       document.querySelector(UISelectors.itemCalories).classList.remove('is-invalid');
+    },
+
+    addItemToForm: function (item) {
+      document.querySelector(UISelectors.itemName).value = item.name;
+      document.querySelector(UISelectors.itemCalories).value = item.calories;
+
     },
 
     validateInput: function (name, calories) {
@@ -139,9 +166,21 @@ const UI = (function () {
       //git totalCalories
       ItemCtrl.logData().totalCalories = calories;
       document.querySelector(UISelectors.totalCalories).innerText = calories;
-      console.log(ItemCtrl.logData())
     },
-
+    clearEditState: function () {
+      UI.clearInput();
+      document.querySelector(UISelectors.addBtn).classList.add('d-none');
+      document.querySelector(UISelectors.updateBtn).classList.remove('d-none');
+      document.querySelector(UISelectors.deleteBtn).classList.remove('d-none');
+      document.querySelector(UISelectors.backBtn).classList.remove('d-none');
+    },
+    reGainState: function () {
+      UI.clearInput();
+      document.querySelector(UISelectors.addBtn).classList.remove('d-none');
+      document.querySelector(UISelectors.updateBtn).classList.add('d-none');
+      document.querySelector(UISelectors.deleteBtn).classList.add('d-none');
+      document.querySelector(UISelectors.backBtn).classList.add('d-none');
+    },
     editItem: function (item) {
 
     }
@@ -159,8 +198,14 @@ const App = (function (ItemCtrl, UI) {
 
     //add an event for add button
     document.querySelector(UISelectors.addBtn).addEventListener('click', itemAddSubmit);
-  }
 
+    //add an event for edit item
+    document.querySelector(UISelectors.itemList).addEventListener('click', editItem);
+
+    //add an event for update button
+    document.querySelector(UISelectors.updateBtn).addEventListener('click', updateItem)
+
+  }
 
   //Add Item Submit
   const itemAddSubmit = function () {
@@ -169,7 +214,7 @@ const App = (function (ItemCtrl, UI) {
     const input = UI.getItemInput();
     const isValid = UI.validateInput(input.name, input.calories)
 
-    //check if is valid, then proceed
+    //check if input is valid, then proceed
     if (!isValid)
       return
 
@@ -183,6 +228,42 @@ const App = (function (ItemCtrl, UI) {
 
     //clear input 
     return setTimeout(UI.clearInput, 3000);
+
+  }
+
+  // Edit Item
+  const editItem = function (e) {
+    const data = ItemCtrl.logData();
+
+    //get currentItem
+    const currentItem = ItemCtrl.findCurrentItem(e, data);
+
+    //add item to form
+    UI.addItemToForm(currentItem);
+  }
+
+  // update Item
+  const updateItem = function () {
+    // get updated input from form
+    const updatedInput = UI.getItemInput();
+
+    const isValid = UI.validateInput(updatedInput.name, updatedInput.calories);
+
+    //check if input is valid, then proceed
+    if (!isValid)
+      return
+
+    //update Item
+    const items = ItemCtrl.updateItem(updatedInput.name, updatedInput.calories);
+
+    //populated updated Items
+    UI.populateItemsList(items);
+
+    //total calories
+    UI.getTotalCalories(items);
+
+    //clear input after 3 seconds
+    setTimeout(UI.reGainState, 3000)
 
 
   }
