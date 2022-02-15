@@ -214,7 +214,8 @@ const App = (function (ItemCtrl, UI) {
     //add an event for delete button
     document.querySelector(UISelectors.deleteBtn).addEventListener('click', deleteItem);
 
-
+    //add an event for back button
+    document.querySelector(UISelectors.backBtn).addEventListener('click', backItem)
 
   }
 
@@ -288,6 +289,11 @@ const App = (function (ItemCtrl, UI) {
     // clear state
     UI.reGainState()
   };
+
+  //back items data
+  const backItem = function () {
+    UI.reGainState();
+  }
 
 
   return {
