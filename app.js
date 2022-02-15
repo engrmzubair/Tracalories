@@ -1,11 +1,30 @@
 //Storage Controller
 
+const StorageCtrl = (function () {
 
+  //public methods
+  return {
+
+    getItems: function () {
+
+      let items = [];
+      if (localStorage.getItem('items') === null)
+        return items
+      else {
+        items = JSON.parse(localStorage.getItem('items'));
+      }
+      return items
+    },
+    updateItems: function (items) {
+      localStorage.setItem('items', JSON.stringify(items));
+    }
+  }
+})();
 
 
 // -------------------------------------------------------------------------------------
 //Item Controller
-const ItemCtrl = (function () {
+const ItemCtrl = (function (StorageCtrl) {
 
   //Item Contructor
   const Item = function (id, name, calories) {
@@ -16,11 +35,7 @@ const ItemCtrl = (function () {
 
   //Data Structure / State
   const data = {
-    items: [
-      { id: 0, name: 'Streak Dinner', calories: 1200 },
-      { id: 1, name: 'Eggs', calories: 400 },
-      { id: 2, name: 'Cookie', calories: 300 }
-    ],
+    items: StorageCtrl.getItems(),
     currentItem: null,
     totalCalories: 0
   }
@@ -34,10 +49,19 @@ const ItemCtrl = (function () {
       return data
     },
     addItem: function (name, calories) {
-      const id = data.items.length;
+      let id;
+      let length = data.items.length;
+
+      // // Create ID
+      if (length > 0) {
+        id = data.items[data.items.length - 1].id + 1;
+      } else {
+        id = 0;
+      }
       calories = parseInt(calories);
-      const items = { id, name, calories };
-      data.items.push(items);
+      const item = { id, name, calories };
+      data.items.push(item);
+      return item;
     },
     findCurrentItem: function (e, data) {
       if (e.target.classList.contains('edit-item')) {
@@ -76,7 +100,7 @@ const ItemCtrl = (function () {
     }
   }
 
-})();
+})(StorageCtrl);
 
 
 // ---------------------------------------------------------------------------------------
@@ -208,7 +232,7 @@ const UI = (function () {
 
 // ------------------------------------------------------------------------------------
 //App Controller
-const App = (function (ItemCtrl, UI) {
+const App = (function (ItemCtrl, UI, StorageCtrl) {
   //load all events
   const loadEventsListeners = function () {
     //get UI Selectors
@@ -253,6 +277,9 @@ const App = (function (ItemCtrl, UI) {
     //total calories
     UI.getTotalCalories(ItemCtrl.getItems());
 
+    //store item to local storage 
+    StorageCtrl.updateItems(ItemCtrl.getItems())
+
     //clear input 
     UI.clearInput();
 
@@ -290,11 +317,17 @@ const App = (function (ItemCtrl, UI) {
     //update Item
     const items = ItemCtrl.updateItem(updatedInput.name, updatedInput.calories);
 
+    // Push items in local storage
+    StorageCtrl.updateItems(items);
+
     //populated updated Items
     UI.populateItemsList(items);
 
     //total calories
     UI.getTotalCalories(items);
+
+    //store item to local storage 
+    StorageCtrl.updateItems(ItemCtrl.getItems())
 
     //get alert on item addition
     UI.getAlert('Item Updated', 'success');
@@ -314,6 +347,10 @@ const App = (function (ItemCtrl, UI) {
 
     //again populate items
     UI.populateItemsList(items);
+
+    //store item to local storage 
+    StorageCtrl.updateItems(ItemCtrl.getItems());
+    console.log(ItemCtrl.getItems());
 
     // clear state
     UI.reGainState()
@@ -341,6 +378,9 @@ const App = (function (ItemCtrl, UI) {
     //calories
     UI.getTotalCalories(items);
 
+    //store item to local storage 
+    StorageCtrl.updateItems(ItemCtrl.getItems());
+
     //get alert on item addition
     UI.getAlert('Items Deleted', 'danger');
 
@@ -352,8 +392,9 @@ const App = (function (ItemCtrl, UI) {
 
   return {
     init: function () {
-      //fetch items from data structure
+      // //fetch items from data structure
       const items = ItemCtrl.getItems();
+
 
       //populate list with items
       UI.populateItemsList(items);
@@ -366,7 +407,6 @@ const App = (function (ItemCtrl, UI) {
     }
   }
 
-})(ItemCtrl, UI);
+})(ItemCtrl, UI, StorageCtrl);
 
 App.init();
-
