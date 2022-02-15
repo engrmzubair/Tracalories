@@ -1,0 +1,62 @@
+.danger {
+  background-color: red;
+  color: white;
+  padding: 0.5rem !important;
+  display: block;
+}
+
+.success {
+  background-color: green;
+  color: white;
+  padding: 0.5rem !important;
+  display: block
+}
+
+.nav-link:hover {
+  color: black !important;
+}
+
+.nav-link {
+  padding: 0.2rem 1rem;
+}
+
+.form-control {
+  border: none;
+  border-bottom: 1px solid #ced4da;
+  border-radius: 0;
+
+}
+
+.form-control:focus {
+  border-radius: 0.25rem;
+}
+
+h4 {
+  font-weight: 400;
+}
+
+.btn-row {
+  margin-left: 0.1rem !important;
+}
+
+.row .btn {
+  width: 20% !important;
+}
+
+
+@media screen and (max-width: 525px) {
+
+  .row .btn {
+    width: 100% !important;
+    margin-bottom: 1rem
+  }
+
+}
+
+@media screen and (min-width: 525px) and (max-width: 1199px) {
+
+  .row .btn {
+    width: 30% !important;
+  }
+
+}

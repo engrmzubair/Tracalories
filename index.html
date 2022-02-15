@@ -16,56 +16,10 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/fontawesome.css"
     integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7" crossorigin="anonymous" />
 
-
-
+  <link rel="stylesheet" href="style.css">
 
   <title>Tracalorie | Meal & Calorie Tracker</title>
-  <style>
-    .danger {
-      background-color: red;
-      color: white;
-      padding: 0.5rem !important;
-      display: block;
-    }
 
-    .success {
-      background-color: green;
-      color: white;
-      padding: 0.5rem !important;
-      display: block
-    }
-
-    .nav-link:hover {
-      color: black !important;
-    }
-
-    .nav-link {
-      padding: 0.2rem 1rem;
-    }
-
-    .form-control {
-      border: none;
-      border-bottom: 1px solid #ced4da;
-      border-radius: 0;
-
-    }
-
-    .form-control:focus {
-      border-radius: 0.25rem;
-    }
-
-    h4 {
-      font-weight: 400;
-    }
-
-    .btn-row {
-      margin-left: 0.1rem !important;
-    }
-
-    .row .btn {
-      width: 20% !important;
-    }
-  </style>
 </head>
 
 <body>
@@ -112,16 +66,17 @@
                 </div>
                 <div class="row btn-row justify-content-between ms-1">
 
-                  <botton class="add-btn btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add Meal
+                  <botton class="add-btn btn btn-primary btn-sm"><i class="fa fa-plus pe-2"></i> Add Meal
                   </botton>
                   <botton class="update-btn btn btn-success btn-sm d-none">
-                    <i class="fas fa-edit"></i> Update
+                    <i class="fas fa-edit pe-2"></i> Update
                     Meal
                   </botton>
                   <botton class="delete-btn btn btn-danger btn-sm d-none">
-                    <i class="fas fa-trash"></i> Delete Meal
+                    <i class="fas fa-trash pe-2"></i> Delete Meal
                   </botton>
-                  <botton class="back-btn btn btn-secondary btn-sm d-none"><i class="fa fa-chevron-circle-left"></i>
+                  <botton class="back-btn btn btn-secondary btn-sm d-none"><i
+                      class="fa fa-chevron-circle-left pe-2"></i>
                     Back Meal
                   </botton>
 
@@ -136,10 +91,7 @@
 
         <!-- item list -->
         <ul id="item-list" class="list-group">
-
         </ul>
-
-
       </div>
     </div>
   </div>
@@ -148,17 +100,6 @@
 
 
 
-
-
-
-
-
-
-
-  <!-- Option 1: Bootstrap Bundle with Popper -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script> -->
   <script src="app.js"></script>
 
 </body>
