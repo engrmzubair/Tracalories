@@ -38,7 +38,6 @@ const ItemCtrl = (function () {
       calories = parseInt(calories);
       const items = { id, name, calories };
       data.items.push(items);
-      console.log(data.items);
     },
     findCurrentItem: function (e, data) {
       if (e.target.classList.contains('edit-item')) {
@@ -69,6 +68,11 @@ const ItemCtrl = (function () {
         }
       });
       return data.items
+    },
+    clearAll: function () {
+      //clear all items
+      data.items.splice(0, data.items.length);
+      return data.items
     }
   }
 
@@ -86,7 +90,8 @@ const UI = (function () {
     backBtn: '.back-btn',
     itemName: '#item-name',
     itemCalories: '#item-calories',
-    totalCalories: '.total-calories'
+    totalCalories: '.total-calories',
+    clearAllBtn: '.clear-btn'
 
   }
 
@@ -215,7 +220,10 @@ const App = (function (ItemCtrl, UI) {
     document.querySelector(UISelectors.deleteBtn).addEventListener('click', deleteItem);
 
     //add an event for back button
-    document.querySelector(UISelectors.backBtn).addEventListener('click', backItem)
+    document.querySelector(UISelectors.backBtn).addEventListener('click', backItem);
+
+    //add an event for clear all button
+    document.querySelector(UISelectors.clearAllBtn).addEventListener('click', clearAll);
 
   }
 
@@ -293,7 +301,20 @@ const App = (function (ItemCtrl, UI) {
   //back items data
   const backItem = function () {
     UI.reGainState();
-  }
+  };
+
+  //clear all btn  
+  const clearAll = function () {
+    //delete all items
+    const items = ItemCtrl.clearAll();
+    
+    //populate
+    UI.populateItemsList(items);
+
+    //calories
+    UI.getTotalCalories(items);
+
+  };
 
 
   return {
